@@ -347,11 +347,12 @@
 
         // Compute running balances and add badges
         // Helper function to create breakdown tooltip
-        function createBreakdownTooltip(dayNum, netChange, items) {
+        function createBreakdownTooltip(dayNum, startBalance, addsTotal, subtractsTotal, endBalance, items) {
           const tooltip = document.createElement('div');
           tooltip.className = 'balance-tooltip';
           
           let html = `<div style="font-weight: bold; margin-bottom: 4px;">Day ${dayNum} Breakdown:</div>`;
+          html += `<div class="breakdown-line"><span>Start</span> <span>$${startBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>`;
           
           // Add each item
           items.forEach(item => {
@@ -362,16 +363,12 @@
             const colorClass = isPositive ? 'breakdown-positive' : 'breakdown-negative';
             html += `<div class="breakdown-line"><span>${name}</span> <span class="${colorClass}">${sign}$${amount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>`;
           });
-          
-          // Add synthetic mortgage if applicable
-          if (dayNum === mortgageDay) {
-            html += `<div class="breakdown-line"><span>UWM Mortgage Payment</span> <span class="breakdown-negative">-$${mortgageAmount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>`;
-          }
-          
-          // Add total net change
-          const totalNet = netChange + (dayNum === mortgageDay ? -mortgageAmount : 0);
-          const totalColorClass = totalNet >= 0 ? 'breakdown-positive' : 'breakdown-negative';
-          html += `<div class="breakdown-total"><span>Net Change</span> <span class="${totalColorClass}">${totalNet >= 0 ? '+' : ''}$${totalNet.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>`;
+          // Totals rows
+          html += `<div class="breakdown-line"><span style="opacity:.85">Adds</span> <span class="breakdown-positive">+$${addsTotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>`;
+          html += `<div class="breakdown-line"><span style="opacity:.85">Subtracts</span> <span class="breakdown-negative">-$${subtractsTotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>`;
+          const net = addsTotal - subtractsTotal;
+          const netClass = net >= 0 ? 'breakdown-positive' : 'breakdown-negative';
+          html += `<div class="breakdown-total"><span>End</span> <span class="${netClass}">$${endBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>`;
           
           tooltip.innerHTML = html;
           return tooltip;
@@ -398,8 +395,10 @@
             const isPositive = li.classList.contains('income') || li.classList.contains('income-payroll');
             day1Items.push({ name, amount: amt, isPositive });
           });
-          
-          const tooltip1 = createBreakdownTooltip(1, dayNet.get(1) || 0, day1Items);
+          const adds1 = day1Items.filter(i => i.isPositive).reduce((s, i) => s + i.amount, 0);
+          const subs1 = day1Items.filter(i => !i.isPositive).reduce((s, i) => s + i.amount, 0);
+          const start1 = running - (adds1 - subs1);
+          const tooltip1 = createBreakdownTooltip(1, start1, adds1, subs1, running, day1Items);
           badge1.appendChild(tooltip1);
           
           if (running < 0) {
@@ -414,12 +413,12 @@
 
         // Days 2..31: accumulate from the provided day-1 ending balance
         for (let d = 2; d <= 31; d++) {
-          running += (dayNet.get(d) || 0);
+          const start = running;
           const cell = dayCells.find(c => parseInt(c.querySelector('.day').textContent, 10) === d);
           if (!cell) continue;
           const badge = document.createElement('div');
           badge.className = 'balance-badge';
-          badge.textContent = `End: $${running.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+          
           
           // Create breakdown for this day
           const dayItems = [];
@@ -434,14 +433,19 @@
             const isPositive = li.classList.contains('income') || li.classList.contains('income-payroll');
             dayItems.push({ name, amount: amt, isPositive });
           });
-          
-          const tooltip = createBreakdownTooltip(d, dayNet.get(d) || 0, dayItems);
+          const adds = dayItems.filter(i => i.isPositive).reduce((s, i) => s + i.amount, 0);
+          let subs = dayItems.filter(i => !i.isPositive).reduce((s, i) => s + i.amount, 0);
+          if (d === mortgageDay) subs += mortgageAmount; // include synthetic mortgage payment
+          const end = start + adds - subs;
+          running = end;
+          badge.textContent = `End: $${end.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+          const tooltip = createBreakdownTooltip(d, start, adds, subs, end, dayItems);
           badge.appendChild(tooltip);
           
           // Color thresholds
-          if (running < 0) {
+          if (end < 0) {
             badge.classList.add('balance-neg');
-          } else if (running < 300) {
+          } else if (end < 300) {
             badge.classList.add('balance-low');
           } else {
             badge.classList.add('balance-pos');
