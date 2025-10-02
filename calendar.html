@@ -87,19 +87,48 @@
         position: absolute;
         bottom: 100%;
         right: 0;
-        background: rgba(0,0,0,0.9);
+        background: rgba(0,0,0,0.95);
         color: white;
-        padding: 8px 12px;
-        border-radius: 8px;
+        padding: 12px 16px;
+        border-radius: 12px;
         font-size: 11px;
         white-space: nowrap;
         opacity: 0;
         visibility: hidden;
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
         z-index: 20;
-        pointer-events: none;
-        max-width: 300px;
+        pointer-events: auto;
+        max-width: 320px;
         white-space: normal;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        border: 1px solid rgba(255,255,255,0.1);
+      }
+      .balance-tooltip-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid rgba(255,255,255,0.2);
+      }
+      .balance-tooltip-title {
+        font-weight: bold;
+        font-size: 12px;
+      }
+      .balance-tooltip-close {
+        background: none;
+        border: none;
+        color: rgba(255,255,255,0.7);
+        cursor: pointer;
+        font-size: 16px;
+        line-height: 1;
+        padding: 2px 4px;
+        border-radius: 4px;
+        transition: all 0.2s ease;
+      }
+      .balance-tooltip-close:hover {
+        background: rgba(255,255,255,0.1);
+        color: white;
       }
       .balance-badge:hover .balance-tooltip {
         opacity: 1;
@@ -111,21 +140,48 @@
         visibility: visible;
       }
       .balance-tooltip .breakdown-line {
-        margin: 2px 0;
+        margin: 4px 0;
         display: flex;
         justify-content: space-between;
+        align-items: center;
+        padding: 2px 0;
+      }
+      .balance-tooltip .breakdown-line.item {
+        background: rgba(255,255,255,0.05);
+        padding: 4px 8px;
+        border-radius: 6px;
+        margin: 2px 0;
       }
       .balance-tooltip .breakdown-positive {
         color: #4CAF50;
+        font-weight: 600;
       }
       .balance-tooltip .breakdown-negative {
         color: #F44336;
+        font-weight: 600;
       }
       .balance-tooltip .breakdown-total {
-        border-top: 1px solid rgba(255,255,255,0.3);
-        margin-top: 4px;
-        padding-top: 4px;
+        border-top: 2px solid rgba(255,255,255,0.3);
+        margin-top: 8px;
+        padding-top: 8px;
         font-weight: bold;
+        font-size: 12px;
+        background: rgba(255,255,255,0.1);
+        padding: 8px 12px;
+        border-radius: 8px;
+        margin-left: -12px;
+        margin-right: -12px;
+        margin-bottom: -8px;
+      }
+      .balance-tooltip .breakdown-section {
+        margin: 6px 0;
+      }
+      .balance-tooltip .breakdown-section-title {
+        font-size: 10px;
+        color: rgba(255,255,255,0.7);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
       }
       .balance-pos { background: rgba(46, 204, 113, 0.15); color: #2ecc71; border-color: rgba(46, 204, 113, 0.5); }
       .balance-low { background: rgba(255, 193, 7, 0.15); color: #ffc107; border-color: rgba(255, 193, 7, 0.5); }
@@ -351,26 +407,58 @@
           const tooltip = document.createElement('div');
           tooltip.className = 'balance-tooltip';
           
-          let html = `<div style="font-weight: bold; margin-bottom: 4px;">Day ${dayNum} Breakdown:</div>`;
-          html += `<div class="breakdown-line"><span>Start</span> <span>$${startBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>`;
+          let html = `
+            <div class="balance-tooltip-header">
+              <div class="balance-tooltip-title">Day ${dayNum} Breakdown</div>
+              <button class="balance-tooltip-close" aria-label="Close tooltip">×</button>
+            </div>
+            <div class="breakdown-line"><span>Starting Balance</span> <span>$${startBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>
+          `;
           
-          // Add each item
-          items.forEach(item => {
-            const amount = item.amount;
-            const name = item.name;
-            const isPositive = item.isPositive;
-            const sign = isPositive ? '+' : '-';
-            const colorClass = isPositive ? 'breakdown-positive' : 'breakdown-negative';
-            html += `<div class="breakdown-line"><span>${name}</span> <span class="${colorClass}">${sign}$${amount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>`;
-          });
-          // Totals rows
-          html += `<div class="breakdown-line"><span style="opacity:.85">Adds</span> <span class="breakdown-positive">+$${addsTotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>`;
-          html += `<div class="breakdown-line"><span style="opacity:.85">Subtracts</span> <span class="breakdown-negative">-$${subtractsTotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>`;
+          // Add transactions section
+          if (items.length > 0) {
+            html += `<div class="breakdown-section">
+              <div class="breakdown-section-title">Transactions</div>`;
+            items.forEach(item => {
+              const amount = item.amount;
+              const name = item.name;
+              const isPositive = item.isPositive;
+              const sign = isPositive ? '+' : '-';
+              const colorClass = isPositive ? 'breakdown-positive' : 'breakdown-negative';
+              html += `<div class="breakdown-line item"><span>${name}</span> <span class="${colorClass}">${sign}$${amount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>`;
+            });
+            html += `</div>`;
+          }
+          
+          // Add synthetic mortgage if applicable
+          if (dayNum === mortgageDay) {
+            html += `<div class="breakdown-line item"><span>UWM Mortgage Payment</span> <span class="breakdown-negative">-$${mortgageAmount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>`;
+          }
+          
+          // Summary section
+          html += `<div class="breakdown-section">
+            <div class="breakdown-section-title">Summary</div>
+            <div class="breakdown-line"><span>Total Adds</span> <span class="breakdown-positive">+$${addsTotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>
+            <div class="breakdown-line"><span>Total Subtracts</span> <span class="breakdown-negative">-$${subtractsTotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>
+          </div>`;
+          
           const net = addsTotal - subtractsTotal;
           const netClass = net >= 0 ? 'breakdown-positive' : 'breakdown-negative';
-          html += `<div class="breakdown-total"><span>End</span> <span class="${netClass}">$${endBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>`;
+          html += `<div class="breakdown-total"><span>Ending Balance</span> <span class="${netClass}">$${endBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>`;
           
           tooltip.innerHTML = html;
+          
+          // Add close button functionality
+          const closeBtn = tooltip.querySelector('.balance-tooltip-close');
+          closeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const badge = tooltip.closest('.balance-badge');
+            if (badge) {
+              badge.classList.remove('open');
+              badge.setAttribute('aria-expanded', 'false');
+            }
+          });
+          
           return tooltip;
         }
 
