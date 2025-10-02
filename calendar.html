@@ -257,7 +257,8 @@
         }
       })();
       (function computeDailyBalances(){
-        const startingBalance = 2591.37; // current balance
+        // End-of-day balance for Oct 1 (user-provided current as of 10/2/25)
+        const balanceAfterDay1 = 2591.37;
         const mortgageDay = 15;
         const mortgageAmount = 2674.85; // assumed payment on 15th
 
@@ -294,8 +295,25 @@
         dayNet.set(mortgageDay, (dayNet.get(mortgageDay) || 0) - mortgageAmount);
 
         // Compute running balances and add badges
-        let running = startingBalance;
-        for (let d = 1; d <= 31; d++) {
+        // Day 1: directly show the provided end-of-day balance
+        let running = balanceAfterDay1;
+        const cellDay1 = dayCells.find(c => parseInt(c.querySelector('.day').textContent, 10) === 1);
+        if (cellDay1) {
+          const badge1 = document.createElement('div');
+          badge1.className = 'balance-badge';
+          badge1.textContent = `End: $${running.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+          if (running < 0) {
+            badge1.classList.add('balance-neg');
+          } else if (running < 300) {
+            badge1.classList.add('balance-low');
+          } else {
+            badge1.classList.add('balance-pos');
+          }
+          cellDay1.appendChild(badge1);
+        }
+
+        // Days 2..31: accumulate from the provided day-1 ending balance
+        for (let d = 2; d <= 31; d++) {
           running += (dayNet.get(d) || 0);
           const cell = dayCells.find(c => parseInt(c.querySelector('.day').textContent, 10) === d);
           if (!cell) continue;
