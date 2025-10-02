@@ -12,7 +12,7 @@
     <style>
       .cal-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; }
       .cal-header { display:flex; justify-content: space-between; align-items:center; margin-bottom: 12px; gap: 8px; }
-      .legend { display:flex; flex-wrap: wrap; gap: 8px; font-size: 12px; color: var(--muted); }
+      .legend { display:flex; flex-wrap: wrap; gap: 8px; font-size: 12px; color: var(--muted); justify-content: center; }
       .legend span { padding: 6px 8px; border-radius: 8px; border: 1px solid var(--border); }
       .income { background:#e6f4ea; color:#0d652d; border-color:#b7dfc8; }
       .bill { background:#fff4e5; color:#8a4b00; border-color:#ffd699; }
@@ -27,7 +27,25 @@
       .totals .row { display:flex; justify-content: space-between; margin: 4px 0; }
       .money-in { color:#0d652d; font-weight: 700; }
       .money-out { color:#7a1f1f; font-weight: 700; }
-      @media (max-width: 767px) { .calendar { gap: 6px; } .cell { min-height: 100px; } }
+      @media (max-width: 767px) { 
+        .calendar { 
+          gap: 4px; 
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          padding-bottom: 8px;
+        } 
+        .cell { 
+          min-height: 90px; 
+          min-width: 120px;
+          padding: 6px;
+        }
+        .day { font-size: 13px; }
+        li { font-size: 11px; padding: 3px 5px; }
+        .legend { flex-direction: column; gap: 6px; }
+        .legend span { text-align: center; }
+        .totals { font-size: 13px; }
+        .totals .row { flex-direction: column; gap: 2px; text-align: center; }
+      }
     </style>
   </head>
   <body>
@@ -46,6 +64,9 @@
             <span class="bill">Bill / Subscription</span>
             <span class="debt">Debt Payment</span>
           </div>
+        </div>
+        <div class="mobile-scroll-hint" style="display:none; text-align:center; font-size:12px; color:var(--muted); margin-bottom:8px;">
+          ← Scroll horizontally to see all days →
         </div>
         <!-- Injected from financial-calendar-10-2025.html with UI-consistent tweaks -->
         <div class="calendar">
@@ -108,6 +129,11 @@
           try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
           window.location.replace('./index.html');
         });
+
+        // Show scroll hint on mobile
+        if (window.innerWidth <= 767) {
+          document.querySelector('.mobile-scroll-hint').style.display = 'block';
+        }
       })();
     </script>
   </body>
