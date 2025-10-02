@@ -232,55 +232,111 @@
           text-align: center;
         }
         
-        /* Mobile tooltip positioning and sizing */
-        .balance-tooltip {
-          position: fixed !important;
-          bottom: 20px !important;
-          left: 20px !important;
-          right: 20px !important;
-          max-width: none !important;
-          width: auto !important;
-          font-size: 12px;
-          padding: 16px;
-          border-radius: 16px;
-          box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+        /* Mobile modal popup */
+        .balance-modal {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.8);
           z-index: 1000;
-          transform: none !important;
+          display: none;
+          align-items: center;
+          justify-content: center;
+          padding: 20px;
         }
         
-        /* Mobile tooltip header */
-        .balance-tooltip-header {
-          margin-bottom: 12px;
-          padding-bottom: 8px;
+        .balance-modal.open {
+          display: flex;
         }
-        .balance-tooltip-title {
+        
+        .balance-modal-content {
+          background: #1a1a1a;
+          border-radius: 16px;
+          padding: 20px;
+          max-width: 90vw;
+          max-height: 80vh;
+          overflow-y: auto;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+          border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .balance-modal-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 16px;
+          padding-bottom: 12px;
+          border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .balance-modal-title {
+          font-size: 18px;
+          font-weight: bold;
+          color: white;
+        }
+        
+        .balance-modal-close {
+          background: rgba(255,255,255,0.1);
+          border: none;
+          color: white;
+          font-size: 24px;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s ease;
+        }
+        
+        .balance-modal-close:hover {
+          background: rgba(255,255,255,0.2);
+        }
+        
+        .balance-modal .breakdown-line {
+          margin: 8px 0;
+          padding: 6px 0;
           font-size: 14px;
-        }
-        .balance-tooltip-close {
-          font-size: 20px;
-          padding: 4px 8px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
         }
         
-        /* Mobile breakdown sections */
-        .balance-tooltip .breakdown-line {
-          margin: 6px 0;
-          padding: 4px 0;
+        .balance-modal .breakdown-line.item {
+          background: rgba(255,255,255,0.05);
+          padding: 8px 12px;
+          border-radius: 8px;
+          margin: 4px 0;
+        }
+        
+        .balance-modal .breakdown-section-title {
           font-size: 12px;
+          color: rgba(255,255,255,0.7);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin: 12px 0 6px 0;
         }
-        .balance-tooltip .breakdown-line.item {
-          padding: 6px 10px;
-          margin: 3px 0;
-        }
-        .balance-tooltip .breakdown-section-title {
-          font-size: 11px;
-          margin-bottom: 6px;
-        }
-        .balance-tooltip .breakdown-total {
-          font-size: 14px;
+        
+        .balance-modal .breakdown-total {
+          background: rgba(255,255,255,0.1);
           padding: 12px 16px;
-          margin-left: -16px;
-          margin-right: -16px;
-          margin-bottom: -12px;
+          border-radius: 12px;
+          margin-top: 16px;
+          font-weight: bold;
+          font-size: 16px;
+        }
+        
+        .balance-modal .breakdown-positive {
+          color: #4CAF50;
+          font-weight: 600;
+        }
+        
+        .balance-modal .breakdown-negative {
+          color: #F44336;
+          font-weight: 600;
         }
         
         /* Improve touch targets */
@@ -487,16 +543,9 @@
         dayNet.set(mortgageDay, (dayNet.get(mortgageDay) || 0) - mortgageAmount);
 
         // Compute running balances and add badges
-        // Helper function to create breakdown tooltip
-        function createBreakdownTooltip(dayNum, startBalance, addsTotal, subtractsTotal, endBalance, items) {
-          const tooltip = document.createElement('div');
-          tooltip.className = 'balance-tooltip';
-          
+        // Helper function to create breakdown tooltip (desktop) or modal content (mobile)
+        function createBreakdownContent(dayNum, startBalance, addsTotal, subtractsTotal, endBalance, items) {
           let html = `
-            <div class="balance-tooltip-header">
-              <div class="balance-tooltip-title">Day ${dayNum} Breakdown</div>
-              <button class="balance-tooltip-close" aria-label="Close tooltip">×</button>
-            </div>
             <div class="breakdown-line"><span>Starting Balance</span> <span>$${startBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>
           `;
           
@@ -531,21 +580,38 @@
           const netClass = net >= 0 ? 'breakdown-positive' : 'breakdown-negative';
           html += `<div class="breakdown-total"><span>Ending Balance</span> <span class="${netClass}">$${endBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>`;
           
-          tooltip.innerHTML = html;
-          
-          // Add close button functionality
-          const closeBtn = tooltip.querySelector('.balance-tooltip-close');
-          closeBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const badge = tooltip.closest('.balance-badge');
-            if (badge) {
-              badge.classList.remove('open');
-              badge.setAttribute('aria-expanded', 'false');
-            }
-          });
-          
-          return tooltip;
+          return html;
         }
+
+        // Create modal element
+        const modal = document.createElement('div');
+        modal.className = 'balance-modal';
+        modal.innerHTML = `
+          <div class="balance-modal-content">
+            <div class="balance-modal-header">
+              <div class="balance-modal-title">Day Breakdown</div>
+              <button class="balance-modal-close" aria-label="Close modal">×</button>
+            </div>
+            <div class="balance-modal-body"></div>
+          </div>
+        `;
+        document.body.appendChild(modal);
+
+        // Modal event handlers
+        const modalClose = modal.querySelector('.balance-modal-close');
+        const modalBody = modal.querySelector('.balance-modal-body');
+        
+        modalClose.addEventListener('click', () => {
+          modal.classList.remove('open');
+          document.body.style.overflow = '';
+        });
+        
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            modal.classList.remove('open');
+            document.body.style.overflow = '';
+          }
+        });
 
         // Day 1: directly show the provided end-of-day balance
         let running = balanceAfterDay1;
@@ -571,7 +637,25 @@
           const adds1 = day1Items.filter(i => i.isPositive).reduce((s, i) => s + i.amount, 0);
           const subs1 = day1Items.filter(i => !i.isPositive).reduce((s, i) => s + i.amount, 0);
           const start1 = running - (adds1 - subs1);
-          const tooltip1 = createBreakdownTooltip(1, start1, adds1, subs1, running, day1Items);
+          // Create tooltip for desktop
+          const tooltip1 = document.createElement('div');
+          tooltip1.className = 'balance-tooltip';
+          tooltip1.innerHTML = `
+            <div class="balance-tooltip-header">
+              <div class="balance-tooltip-title">Day 1 Breakdown</div>
+              <button class="balance-tooltip-close" aria-label="Close tooltip">×</button>
+            </div>
+            ${createBreakdownContent(1, start1, adds1, subs1, running, day1Items)}
+          `;
+          
+          // Add close button functionality
+          const closeBtn1 = tooltip1.querySelector('.balance-tooltip-close');
+          closeBtn1.addEventListener('click', (e) => {
+            e.stopPropagation();
+            badge1.classList.remove('open');
+            badge1.setAttribute('aria-expanded', 'false');
+          });
+          
           badge1.appendChild(tooltip1);
           
           if (running < 0) {
@@ -612,7 +696,25 @@
           const end = start + adds - subs;
           running = end;
           badge.textContent = `End: $${end.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-          const tooltip = createBreakdownTooltip(d, start, adds, subs, end, dayItems);
+          // Create tooltip for desktop
+          const tooltip = document.createElement('div');
+          tooltip.className = 'balance-tooltip';
+          tooltip.innerHTML = `
+            <div class="balance-tooltip-header">
+              <div class="balance-tooltip-title">Day ${d} Breakdown</div>
+              <button class="balance-tooltip-close" aria-label="Close tooltip">×</button>
+            </div>
+            ${createBreakdownContent(d, start, adds, subs, end, dayItems)}
+          `;
+          
+          // Add close button functionality
+          const closeBtn = tooltip.querySelector('.balance-tooltip-close');
+          closeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            badge.classList.remove('open');
+            badge.setAttribute('aria-expanded', 'false');
+          });
+          
           badge.appendChild(tooltip);
           
           // Color thresholds
@@ -658,18 +760,29 @@
           const toggle = (ev) => {
             ev.stopPropagation();
             ev.preventDefault();
-            const isOpen = badge.classList.toggle('open');
-            badge.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
             
-            // On mobile, scroll the badge into view when opening
-            if (isOpen && window.innerWidth <= 767) {
-              setTimeout(() => {
-                badge.scrollIntoView({ 
-                  behavior: 'smooth', 
-                  block: 'center',
-                  inline: 'center'
-                });
-              }, 100);
+            // Check if mobile
+            const isMobile = window.innerWidth <= 767;
+            
+            if (isMobile) {
+              // Use modal on mobile
+              const dayNum = parseInt(badge.closest('.cell').querySelector('.day').textContent, 10);
+              const modalTitle = modal.querySelector('.balance-modal-title');
+              modalTitle.textContent = `Day ${dayNum} Breakdown`;
+              
+              // Get the breakdown content from the tooltip
+              const tooltipContent = badge.querySelector('.balance-tooltip');
+              if (tooltipContent) {
+                const content = tooltipContent.innerHTML.replace(/<div class="balance-tooltip-header">.*?<\/div>/s, '');
+                modalBody.innerHTML = content;
+              }
+              
+              modal.classList.add('open');
+              document.body.style.overflow = 'hidden';
+            } else {
+              // Use tooltip on desktop
+              const isOpen = badge.classList.toggle('open');
+              badge.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
             }
           };
           
