@@ -69,6 +69,9 @@
         <div class="mobile-scroll-hint" style="display:none; text-align:center; font-size:12px; color:var(--muted); margin-bottom:8px;">
           ← Scroll horizontally to see all days →
         </div>
+        <div id="current-date-info" style="text-align:center; font-size:12px; color:var(--muted); margin-bottom:8px;">
+          <!-- Current date will be inserted here by JavaScript -->
+        </div>
         <!-- Injected from financial-calendar-10-2025.html with UI-consistent tweaks -->
         <div class="calendar">
           <div class="dow">Sun</div><div class="dow">Mon</div><div class="dow">Tue</div><div class="dow">Wed</div><div class="dow">Thu</div><div class="dow">Fri</div><div class="dow">Sat</div>
@@ -134,6 +137,43 @@
         // Show scroll hint on mobile
         if (window.innerWidth <= 767) {
           document.querySelector('.mobile-scroll-hint').style.display = 'block';
+        }
+
+        // Highlight current date and show date info
+        const today = new Date();
+        const currentDay = today.getDate();
+        const currentMonth = today.getMonth() + 1; // JavaScript months are 0-indexed
+        const currentYear = today.getFullYear();
+        
+        // Show current date info
+        const dateInfoEl = document.getElementById('current-date-info');
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                           'July', 'August', 'September', 'October', 'November', 'December'];
+        const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        
+        dateInfoEl.innerHTML = `Today is ${dayNames[today.getDay()]}, ${monthNames[currentMonth-1]} ${currentDay}, ${currentYear}`;
+        
+        // Only highlight if we're viewing October 2025
+        if (currentMonth === 10 && currentYear === 2025) {
+          const dayElements = document.querySelectorAll('.day');
+          dayElements.forEach(dayEl => {
+            const dayNumber = parseInt(dayEl.textContent);
+            if (dayNumber === currentDay) {
+              dayEl.style.backgroundColor = '#4f8cff';
+              dayEl.style.color = 'white';
+              dayEl.style.borderRadius = '50%';
+              dayEl.style.width = '24px';
+              dayEl.style.height = '24px';
+              dayEl.style.display = 'flex';
+              dayEl.style.alignItems = 'center';
+              dayEl.style.justifyContent = 'center';
+              dayEl.style.fontWeight = '700';
+              dayEl.title = 'Today';
+            }
+          });
+        } else {
+          // If not October 2025, show a note
+          dateInfoEl.innerHTML += ' (Calendar shows October 2025)';
         }
       })();
     </script>
