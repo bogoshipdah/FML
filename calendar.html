@@ -139,6 +139,15 @@
         opacity: 1;
         visibility: visible;
       }
+      
+      /* Mobile-specific tooltip visibility */
+      @media (max-width: 767px) {
+        .balance-badge.open .balance-tooltip {
+          opacity: 1 !important;
+          visibility: visible !important;
+          display: block !important;
+        }
+      }
       .balance-tooltip .breakdown-line {
         margin: 4px 0;
         display: flex;
@@ -225,17 +234,18 @@
         
         /* Mobile tooltip positioning and sizing */
         .balance-tooltip {
-          position: fixed;
-          bottom: 20px;
-          left: 20px;
-          right: 20px;
-          max-width: none;
-          width: auto;
+          position: fixed !important;
+          bottom: 20px !important;
+          left: 20px !important;
+          right: 20px !important;
+          max-width: none !important;
+          width: auto !important;
           font-size: 12px;
           padding: 16px;
           border-radius: 16px;
           box-shadow: 0 16px 48px rgba(0,0,0,0.4);
           z-index: 1000;
+          transform: none !important;
         }
         
         /* Mobile tooltip header */
