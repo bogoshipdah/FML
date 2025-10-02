@@ -50,12 +50,26 @@
         form.addEventListener('submit', function (e) {
           e.preventDefault();
           const val = input.value;
-          if (verify(val)) {
-            try { localStorage.setItem(STORAGE_KEY, '1'); } catch (e) {}
-            window.location.href = './calendar.html';
-          } else {
-            errorEl.hidden = false;
-          }
+          const submitBtn = form.querySelector('button[type="submit"]');
+          
+          // Show loading state
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Verifying...';
+          
+          // Simulate brief loading for better UX
+          setTimeout(() => {
+            if (verify(val)) {
+              try { localStorage.setItem(STORAGE_KEY, '1'); } catch (e) {}
+              submitBtn.textContent = 'Success!';
+              setTimeout(() => {
+                window.location.href = './calendar.html';
+              }, 300);
+            } else {
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Unlock';
+              errorEl.hidden = false;
+            }
+          }, 500);
         });
       })();
     </script>
