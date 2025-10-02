@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cost Reduction Plan – October 2025</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+    <link rel="stylesheet" href="./styles.css">
+    <meta name="robots" content="noindex,nofollow,noarchive">
+    <style>
+      .reduction-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; }
+      .table-container { overflow-x: auto; margin: 16px 0; }
+      table { width: 100%; border-collapse: collapse; font-size: 14px; }
+      th, td { padding: 12px 8px; text-align: left; border-bottom: 1px solid var(--border); }
+      th { background: var(--bg); color: var(--text); font-weight: 700; position: sticky; top: 0; }
+      td { color: var(--muted); }
+      .bill-name { font-weight: 600; color: var(--text); }
+      .current-cost { color: #ff8b8b; font-weight: 600; }
+      .new-cost { color: #4f8cff; font-weight: 600; }
+      .savings { color: #00ff41; font-weight: 700; }
+      .action-cut { background: rgba(255, 139, 139, 0.1); color: #ff6b6b; padding: 4px 8px; border-radius: 6px; font-size: 12px; }
+      .action-reduce { background: rgba(79, 140, 255, 0.1); color: #4f8cff; padding: 4px 8px; border-radius: 6px; font-size: 12px; }
+      .totals-section { margin-top: 24px; padding: 16px; background: rgba(0, 255, 65, 0.05); border: 1px solid rgba(0, 255, 65, 0.2); border-radius: 10px; }
+      .totals-section h3 { margin: 0 0 12px; color: #00ff41; }
+      .totals-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+      .total-item { text-align: center; }
+      .total-value { font-size: 24px; font-weight: 700; margin: 4px 0; }
+      .current-total { color: #ff8b8b; }
+      .new-total { color: #4f8cff; }
+      .savings-total { color: #00ff41; }
+      @media (max-width: 767px) {
+        th, td { padding: 8px 4px; font-size: 12px; }
+        .totals-grid { grid-template-columns: 1fr; }
+        .total-value { font-size: 20px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <h1>Cost Reduction Plan</h1>
+        <nav>
+          <a class="btn" href="./calendar.html">Calendar</a>
+          <a class="btn secondary" href="./overview.html">Overview PDF</a>
+          <button id="lock" class="btn secondary" type="button">Lock</button>
+        </nav>
+      </header>
+      <section class="reduction-wrap">
+        <p style="color: var(--muted); margin-bottom: 20px;">Identified bills and subscriptions that can be cut or reduced to improve monthly cash flow.</p>
+        
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Bill / Subscription</th>
+                <th>Current Cost</th>
+                <th>Action</th>
+                <th>New Cost</th>
+                <th>Monthly Savings</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="bill-name">NEXT Insurance (Trainer Liability)</td>
+                <td class="current-cost">$28.08</td>
+                <td><span class="action-cut">Cut</span></td>
+                <td class="new-cost">$0.00</td>
+                <td class="savings">$28.08</td>
+              </tr>
+              <tr>
+                <td class="bill-name">BCBS Health Insurance</td>
+                <td class="current-cost">$45.41</td>
+                <td><span class="action-cut">Cut</span></td>
+                <td class="new-cost">$0.00</td>
+                <td class="savings">$45.41</td>
+              </tr>
+              <tr>
+                <td class="bill-name">Spectrum Mobile</td>
+                <td class="current-cost">$78.33</td>
+                <td><span class="action-reduce">Reduce</span></td>
+                <td class="new-cost">$50.00</td>
+                <td class="savings">$28.33</td>
+              </tr>
+              <tr>
+                <td class="bill-name">T-Mobile Internet</td>
+                <td class="current-cost">$70.00</td>
+                <td><span class="action-cut">Cut</span></td>
+                <td class="new-cost">$0.00</td>
+                <td class="savings">$70.00</td>
+              </tr>
+              <tr>
+                <td class="bill-name">Planet Fitness</td>
+                <td class="current-cost">$21.65</td>
+                <td><span class="action-cut">Cut</span></td>
+                <td class="new-cost">$0.00</td>
+                <td class="savings">$21.65</td>
+              </tr>
+              <tr>
+                <td class="bill-name">Canva</td>
+                <td class="current-cost">$15.00</td>
+                <td><span class="action-cut">Cut</span></td>
+                <td class="new-cost">$0.00</td>
+                <td class="savings">$15.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="totals-section">
+          <h3>📊 Savings Summary</h3>
+          <div class="totals-grid">
+            <div class="total-item">
+              <div>Current Monthly Cost</div>
+              <div class="total-value current-total">$258.47</div>
+            </div>
+            <div class="total-item">
+              <div>New Monthly Cost</div>
+              <div class="total-value new-total">$50.00</div>
+            </div>
+            <div class="total-item">
+              <div>Total Monthly Savings</div>
+              <div class="total-value savings-total">$208.47</div>
+            </div>
+          </div>
+          <p style="margin-top: 16px; color: var(--muted); text-align: center;">
+            💡 <strong>Impact:</strong> This would reduce your monthly deficit from <span style="color: #ff8b8b;">-$810.07</span> to <span style="color: #ff8b8b;">-$601.60</span>
+          </p>
+        </div>
+
+        <div style="margin-top: 20px; padding: 16px; background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.3); border-radius: 10px;">
+          <h4 style="margin: 0 0 8px; color: #ffc107;">⚠️ Considerations</h4>
+          <ul style="margin: 0; color: var(--muted); font-size: 14px;">
+            <li>Verify if NEXT Insurance is required for your trainer work</li>
+            <li>Check if BCBS coverage is duplicated elsewhere</li>
+            <li>Confirm Spectrum Internet-only pricing before canceling T-Mobile</li>
+            <li>Ensure you have alternative gym access before canceling Planet Fitness</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+    <script>
+      (function () {
+        const STORAGE_KEY = "fml_overview_access_granted";
+        try {
+          if (localStorage.getItem(STORAGE_KEY) !== '1') {
+            window.location.replace('./index.html');
+            return;
+          }
+        } catch (e) {
+          window.location.replace('./index.html');
+          return;
+        }
+        document.getElementById('lock').addEventListener('click', function () {
+          try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+          window.location.replace('./index.html');
+        });
+      })();
+    </script>
+  </body>
+</html>
