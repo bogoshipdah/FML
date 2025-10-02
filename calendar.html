@@ -275,6 +275,9 @@
           let net = 0;
           const items = cell.querySelectorAll('li');
           items.forEach(li => {
+            // Ignore informational UWM window item; we'll handle the actual payment on the 15th
+            const txt = li.textContent || '';
+            if (/uwm\s*mortgage.*window/i.test(txt)) return;
             const m = li.textContent.match(amountRegex);
             if (!m) return;
             const amt = parseFloat(m[1].replace(/,/g, ''));
