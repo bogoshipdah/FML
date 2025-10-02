@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Financial Overview - Access</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
+    <meta name="robots" content="noindex,nofollow,noarchive">
+  </head>
+  <body>
+    <main class="container">
+      <section class="card">
+        <h1>Financial Overview</h1>
+        <p>Please enter the password to view the private financial overview.</p>
+        <form id="access-form" class="form" autocomplete="off">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" inputmode="text" placeholder="Enter password" required>
+          <button type="submit">Unlock</button>
+          <p id="error" class="error" role="alert" aria-live="polite" hidden>Incorrect password. Try again.</p>
+        </form>
+      </section>
+      <footer class="foot">
+      </footer>
+    </main>
+    <script>
+      (function () {
+        const PASSWORD = "hanfamily77";
+        const STORAGE_KEY = "fml_overview_access_granted";
+
+        function verify(p) {
+          return (p || "").trim() === PASSWORD;
+        }
+
+        const form = document.getElementById('access-form');
+        const input = document.getElementById('password');
+        const errorEl = document.getElementById('error');
+
+        // If already unlocked in this browser, go directly
+        try {
+          if (localStorage.getItem(STORAGE_KEY) === '1') {
+            window.location.href = './overview.html';
+            return;
+          }
+        } catch (e) { /* ignore */ }
+
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          const val = input.value;
+          if (verify(val)) {
+            try { localStorage.setItem(STORAGE_KEY, '1'); } catch (e) {}
+            window.location.href = './overview.html';
+          } else {
+            errorEl.hidden = false;
+          }
+        });
+      })();
+    </script>
+  </body>
+  </html>
+
+
