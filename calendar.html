@@ -105,6 +105,11 @@
         opacity: 1;
         visibility: visible;
       }
+      /* Also show when opened by tap/click (mobile) */
+      .balance-badge.open .balance-tooltip {
+        opacity: 1;
+        visibility: visible;
+      }
       .balance-tooltip .breakdown-line {
         margin: 2px 0;
         display: flex;
@@ -443,6 +448,40 @@
           }
           cell.appendChild(badge);
         }
+
+        // Enable tap/click to toggle tooltips (mobile-friendly)
+        const closeAllTooltips = () => {
+          document.querySelectorAll('.balance-badge.open').forEach(b => b.classList.remove('open'));
+        };
+        document.addEventListener('click', (e) => {
+          const target = e.target;
+          if (!(target instanceof Element)) return;
+          if (!target.closest('.balance-badge')) {
+            closeAllTooltips();
+          }
+        });
+        document.querySelectorAll('.balance-badge').forEach(badge => {
+          badge.setAttribute('tabindex', '0');
+          badge.setAttribute('role', 'button');
+          badge.setAttribute('aria-expanded', 'false');
+          const toggle = (ev) => {
+            ev.stopPropagation();
+            const isOpen = badge.classList.toggle('open');
+            badge.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+          };
+          badge.addEventListener('click', toggle);
+          badge.addEventListener('touchstart', toggle, { passive: true });
+          badge.addEventListener('keydown', (ev) => {
+            if (ev.key === 'Enter' || ev.key === ' ') {
+              ev.preventDefault();
+              toggle(ev);
+            }
+            if (ev.key === 'Escape') {
+              badge.classList.remove('open');
+              badge.setAttribute('aria-expanded', 'false');
+            }
+          });
+        });
       })();
     </script>
   </body>
