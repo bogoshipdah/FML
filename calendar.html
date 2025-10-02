@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Money Calendar – October 2025</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
+    <meta name="robots" content="noindex,nofollow,noarchive">
+    <style>
+      .cal-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; }
+      .cal-header { display:flex; justify-content: space-between; align-items:center; margin-bottom: 12px; gap: 8px; }
+      .legend { display:flex; flex-wrap: wrap; gap: 8px; font-size: 12px; color: var(--muted); }
+      .legend span { padding: 6px 8px; border-radius: 8px; border: 1px solid var(--border); }
+      .income { background:#e6f4ea; color:#0d652d; border-color:#b7dfc8; }
+      .bill { background:#fff4e5; color:#8a4b00; border-color:#ffd699; }
+      .debt { background:#fde8e8; color:#7a1f1f; border-color:#f5bcbc; }
+      .calendar { display:grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+      .dow { font-weight: 700; text-align: center; color: var(--muted); }
+      .cell { border: 1px solid var(--border); border-radius: 10px; min-height: 120px; padding: 8px; display:flex; flex-direction:column; background:#0c1220; }
+      .day { font-weight: 700; font-size: 14px; margin-bottom: 6px; color:#e6eefc; }
+      ul { list-style: none; padding-left: 0; margin: 0; display:flex; flex-direction:column; gap:4px; }
+      li { font-size: 12px; padding: 4px 6px; border-radius: 6px; border:1px solid #eee; background:#fff; color:#222; }
+      .totals { margin-top: 16px; font-size: 14px; color: var(--muted); }
+      .totals .row { display:flex; justify-content: space-between; margin: 4px 0; }
+      .money-in { color:#0d652d; font-weight: 700; }
+      .money-out { color:#7a1f1f; font-weight: 700; }
+      @media (max-width: 767px) { .calendar { gap: 6px; } .cell { min-height: 100px; } }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <h1>October 2025 – Money Calendar</h1>
+        <nav>
+          <a class="btn" href="./overview.html">Overview PDF</a>
+          <button id="lock" class="btn secondary" type="button">Lock</button>
+        </nav>
+      </header>
+      <section class="cal-wrap">
+        <div class="cal-header">
+          <div class="legend">
+            <span class="income">Money In</span>
+            <span class="bill">Bill / Subscription</span>
+            <span class="debt">Debt Payment</span>
+          </div>
+        </div>
+        <!-- Injected from financial-calendar-10-2025.html with UI-consistent tweaks -->
+        <div class="calendar">
+          <div class="dow">Sun</div><div class="dow">Mon</div><div class="dow">Tue</div><div class="dow">Wed</div><div class="dow">Thu</div><div class="dow">Fri</div><div class="dow">Sat</div>
+          <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+          <div class="cell"><div class="day">1</div><ul><li class="bill">NEXT Insurance (Trainer Liability) — $28.08</li><li class="bill">ISSA (subscription) — $16.65</li><li class="bill">BCBS Health Insurance — $45.41</li><li class="bill">Meetup.org — $47.96</li><li class="debt">UWM Mortgage (window 1–16) — $2,674.85</li></ul></div>
+          <div class="cell"><div class="day">2</div><ul></ul></div>
+          <div class="cell"><div class="day">3</div><ul><li class="bill">Travelers (Home Insurance) — $232.33</li></ul></div>
+          <div class="cell"><div class="day">4</div><ul><li class="income">Room Rent (Tenant #1) — $600.00</li></ul></div>
+          <div class="cell"><div class="day">5</div><ul><li class="bill">Just Energy (Electricity) — $200.35</li><li class="bill">Shopify — $1.07</li><li class="income">Booz Allen Hamilton Payroll — $1,928.03</li></ul></div>
+          <div class="cell"><div class="day">6</div><ul></ul></div>
+          <div class="cell"><div class="day">7</div><ul></ul></div>
+          <div class="cell"><div class="day">8</div><ul><li class="bill">Spectrum Mobile — $78.33</li><li class="bill">T-Mobile Internet — $70.00</li><li class="income">Room Rent (Tenant #2) — $640.00</li><li class="bill">Man’s T Clinic — $14.63</li></ul></div>
+          <div class="cell"><div class="day">9</div><ul><li class="debt">Best Egg Loan — $685.43</li></ul></div>
+          <div class="cell"><div class="day">10</div><ul></ul></div>
+          <div class="cell"><div class="day">11</div><ul><li class="bill">Quell Pest Control — $47.63</li><li class="bill">Man’s T Clinic — $14.63</li></ul></div>
+          <div class="cell"><div class="day">12</div><ul></ul></div>
+          <div class="cell"><div class="day">13</div><ul></ul></div>
+          <div class="cell"><div class="day">14</div><ul></ul></div>
+          <div class="cell"><div class="day">15</div><ul><li class="bill">ISSA (additional) — $92.64</li><li class="bill">Best Buy — $30.00</li><li class="bill">Man’s T Clinic — $14.63</li></ul></div>
+          <div class="cell"><div class="day">16</div><ul></ul></div>
+          <div class="cell"><div class="day">17</div><ul><li class="bill">Apple Subscription (iCloud/Services) — $21.64</li><li class="bill">Apple Subscription (Other) — $14.06</li><li class="bill">Planet Fitness — $21.65</li></ul></div>
+          <div class="cell"><div class="day">18</div><ul><li class="debt">American Express — $575.85</li></ul></div>
+          <div class="cell"><div class="day">19</div><ul></ul></div>
+          <div class="cell"><div class="day">20</div><ul></ul></div>
+          <div class="cell"><div class="day">21</div><ul></ul></div>
+          <div class="cell"><div class="day">22</div><ul><li class="bill">Canva — $15.00</li><li class="bill">Super Llama — $23.79</li><li class="bill">Steperton — $13.65</li><li class="bill">Man’s T Clinic — $14.63</li><li class="income">Booz Allen Hamilton Payroll — $1,928.04</li></ul></div>
+          <div class="cell"><div class="day">23</div><ul><li class="bill">Heptabase — $11.99</li><li class="debt">Chase — $312.00</li></ul></div>
+          <div class="cell"><div class="day">24</div><ul><li class="bill">ISSA (course payment) — $83.33</li><li class="bill">Student Loan (ADVS-ED-SERV PPD) — $81.05</li></ul></div>
+          <div class="cell"><div class="day">25</div><ul></ul></div>
+          <div class="cell"><div class="day">26</div><ul></ul></div>
+          <div class="cell"><div class="day">27</div><ul></ul></div>
+          <div class="cell"><div class="day">28</div><ul></ul></div>
+          <div class="cell"><div class="day">29</div><ul><li class="bill">Man’s T Clinic — $14.63</li></ul></div>
+          <div class="cell"><div class="day">30</div><ul></ul></div>
+          <div class="cell"><div class="day">31</div><ul><li class="debt">Apple Card (MacBook Pro) — $408.25</li></ul></div>
+          <div class="cell"></div>
+        </div>
+        <div class="totals">
+          <div class="row"><span>Total Money In:</span> <span class="money-in">$5,096.07</span></div>
+          <div class="row"><span>Total Money Out:</span> <span class="money-out">$5,906.14</span></div>
+          <div class="row"><span>Result (Shortfall if negative):</span> <span style="font-weight:700;color:#ff8b8b;">$-810.07</span></div>
+          <div class="footer-note" style="margin-top:10px;color:var(--muted);">Note: UWM Mortgage appears on the 1st as a 1–16 day payment window.</div>
+        </div>
+      </section>
+    </main>
+    <script>
+      (function () {
+        const STORAGE_KEY = "fml_overview_access_granted";
+        try {
+          if (localStorage.getItem(STORAGE_KEY) !== '1') {
+            window.location.replace('./index.html');
+            return;
+          }
+        } catch (e) {
+          window.location.replace('./index.html');
+          return;
+        }
+        document.getElementById('lock').addEventListener('click', function () {
+          try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+          window.location.replace('./index.html');
+        });
+      })();
+    </script>
+  </body>
+  </html>
+
+
