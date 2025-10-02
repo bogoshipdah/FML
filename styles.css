@@ -124,6 +124,7 @@ button, .btn {
   overflow: auto; 
   background: #ffffff; 
   border-radius: 14px; 
+  -webkit-overflow-scrolling: touch; /* iOS momentum scrolling */
 }
 .pdf { 
   width: 100%; 
@@ -139,6 +140,25 @@ button, .btn {
     height: 80vh; 
     min-height: 360px;
   }
+}
+
+/* Mobile-specific: show callout instead of inline PDF for better UX */
+@media (max-width: 767px) {
+  .viewer { display: none; }
+  .mobile-callout { 
+    display: block; 
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px; 
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  }
+  .mobile-callout p { margin: 0 0 12px; }
+  .mobile-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+}
+
+@media (min-width: 768px) {
+  .mobile-callout { display: none; }
 }
 
 .foot { margin-top: 16px; color: var(--muted); }
