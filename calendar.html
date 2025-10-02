@@ -19,6 +19,8 @@
       .income-payroll { background:#e6f4ff; color:#1a4d99; border-color:#b3d9ff; font-weight: 600; }
       .bill { background:#fff4e5; color:#8a4b00; border-color:#ffd699; }
       .debt { background:#fde8e8; color:#7a1f1f; border-color:#f5bcbc; }
+      .uwm-window { background: rgba(255, 193, 7, 0.15); border-color: #ffc107; }
+      .uwm-window-end { background: rgba(255, 87, 34, 0.2); border-color: #ff5722; }
       .calendar { display:grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
       .dow { font-weight: 700; text-align: center; color: var(--muted); }
       .cell { 
@@ -94,6 +96,8 @@
             <span class="income">Money In (Blue)</span>
             <span class="bill">Bill / Subscription</span>
             <span class="debt">Debt Payment</span>
+            <span class="uwm-window">UWM Window (1-16)</span>
+            <span class="uwm-window-end">Window Ends (16th)</span>
           </div>
         </div>
         <div class="mobile-scroll-hint" style="display:none; text-align:center; font-size:12px; color:var(--muted); margin-bottom:8px;">
@@ -106,22 +110,22 @@
         <div class="calendar">
           <div class="dow">Sun</div><div class="dow">Mon</div><div class="dow">Tue</div><div class="dow">Wed</div><div class="dow">Thu</div><div class="dow">Fri</div><div class="dow">Sat</div>
           <div class="cell"></div><div class="cell"></div><div class="cell"></div>
-          <div class="cell"><div class="day">1</div><ul><li class="bill">NEXT Insurance (Trainer Liability) — $28.08</li><li class="bill">ISSA (subscription) — $16.65</li><li class="bill">BCBS Health Insurance — $45.41</li><li class="bill">Meetup.org — $47.96</li><li class="debt">UWM Mortgage (window 1–16) — $2,674.85</li></ul></div>
-          <div class="cell"><div class="day">2</div><ul></ul></div>
-          <div class="cell"><div class="day">3</div><ul><li class="bill">Travelers (Home Insurance) — $232.33</li></ul></div>
-          <div class="cell"><div class="day">4</div><ul><li class="income">🏠 Room Rent (Tenant #1) — $600.00</li></ul></div>
-          <div class="cell"><div class="day">5</div><ul><li class="bill">Just Energy (Electricity) — $200.35</li><li class="bill">Shopify — $1.07</li><li class="income-payroll">💰 Booz Allen Hamilton Payroll — $1,928.03</li></ul></div>
-          <div class="cell"><div class="day">6</div><ul></ul></div>
-          <div class="cell"><div class="day">7</div><ul></ul></div>
-          <div class="cell"><div class="day">8</div><ul><li class="bill">Spectrum Mobile — $78.33</li><li class="bill">T-Mobile Internet — $70.00</li><li class="income">🏠 Room Rent (Tenant #2) — $640.00</li><li class="bill">Man's T Clinic — $14.63</li></ul></div>
-          <div class="cell"><div class="day">9</div><ul><li class="debt">Best Egg Loan — $685.43</li></ul></div>
-          <div class="cell"><div class="day">10</div><ul></ul></div>
-          <div class="cell"><div class="day">11</div><ul><li class="bill">Quell Pest Control — $47.63</li><li class="bill">Man’s T Clinic — $14.63</li></ul></div>
-          <div class="cell"><div class="day">12</div><ul></ul></div>
-          <div class="cell"><div class="day">13</div><ul></ul></div>
-          <div class="cell"><div class="day">14</div><ul></ul></div>
-          <div class="cell"><div class="day">15</div><ul><li class="bill">ISSA (additional) — $92.64</li><li class="bill">Best Buy — $30.00</li><li class="bill">Man’s T Clinic — $14.63</li></ul></div>
-          <div class="cell"><div class="day">16</div><ul></ul></div>
+          <div class="cell uwm-window"><div class="day">1</div><ul><li class="bill">NEXT Insurance (Trainer Liability) — $28.08</li><li class="bill">ISSA (subscription) — $16.65</li><li class="bill">BCBS Health Insurance — $45.41</li><li class="bill">Meetup.org — $47.96</li><li class="debt">UWM Mortgage (window 1–16) — $2,674.85</li></ul></div>
+          <div class="cell uwm-window"><div class="day">2</div><ul></ul></div>
+          <div class="cell uwm-window"><div class="day">3</div><ul><li class="bill">Travelers (Home Insurance) — $232.33</li></ul></div>
+          <div class="cell uwm-window"><div class="day">4</div><ul><li class="income">🏠 Room Rent (Tenant #1) — $600.00</li></ul></div>
+          <div class="cell uwm-window"><div class="day">5</div><ul><li class="bill">Just Energy (Electricity) — $200.35</li><li class="bill">Shopify — $1.07</li><li class="income-payroll">💰 Booz Allen Hamilton Payroll — $1,928.03</li></ul></div>
+          <div class="cell uwm-window"><div class="day">6</div><ul></ul></div>
+          <div class="cell uwm-window"><div class="day">7</div><ul></ul></div>
+          <div class="cell uwm-window"><div class="day">8</div><ul><li class="bill">Spectrum Mobile — $78.33</li><li class="bill">T-Mobile Internet — $70.00</li><li class="income">🏠 Room Rent (Tenant #2) — $640.00</li><li class="bill">Man's T Clinic — $14.63</li></ul></div>
+          <div class="cell uwm-window"><div class="day">9</div><ul><li class="debt">Best Egg Loan — $685.43</li></ul></div>
+          <div class="cell uwm-window"><div class="day">10</div><ul></ul></div>
+          <div class="cell uwm-window"><div class="day">11</div><ul><li class="bill">Quell Pest Control — $47.63</li><li class="bill">Man's T Clinic — $14.63</li></ul></div>
+          <div class="cell uwm-window"><div class="day">12</div><ul></ul></div>
+          <div class="cell uwm-window"><div class="day">13</div><ul></ul></div>
+          <div class="cell uwm-window"><div class="day">14</div><ul></ul></div>
+          <div class="cell uwm-window"><div class="day">15</div><ul><li class="bill">ISSA (additional) — $92.64</li><li class="bill">Best Buy — $30.00</li><li class="bill">Man's T Clinic — $14.63</li></ul></div>
+          <div class="cell uwm-window-end"><div class="day">16</div><ul></ul></div>
           <div class="cell"><div class="day">17</div><ul><li class="bill">Apple Subscription (iCloud/Services) — $21.64</li><li class="bill">Apple Subscription (Other) — $14.06</li><li class="bill">Planet Fitness — $21.65</li></ul></div>
           <div class="cell"><div class="day">18</div><ul><li class="debt">American Express — $575.85</li></ul></div>
           <div class="cell"><div class="day">19</div><ul></ul></div>
