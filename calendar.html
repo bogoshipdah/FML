@@ -196,9 +196,9 @@
           scroll-behavior: smooth;
         } 
         .cell { 
-          min-height: 90px; 
-          min-width: 120px;
-          padding: 6px;
+          min-height: 100px; 
+          min-width: 130px;
+          padding: 8px;
           scroll-snap-align: start;
           transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
@@ -206,12 +206,87 @@
           transform: translateY(-2px);
           box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
-        .day { font-size: 13px; }
-        li { font-size: 11px; padding: 3px 5px; }
+        .day { font-size: 14px; font-weight: 700; }
+        li { font-size: 10px; padding: 3px 5px; line-height: 1.3; }
         .legend { flex-direction: column; gap: 6px; }
-        .legend span { text-align: center; }
+        .legend span { text-align: center; font-size: 11px; padding: 4px 6px; }
         .totals { font-size: 13px; }
         .totals .row { flex-direction: column; gap: 2px; text-align: center; }
+        
+        /* Mobile-specific balance badge improvements */
+        .balance-badge { 
+          font-size: 9px; 
+          padding: 3px 6px; 
+          right: 4px; 
+          bottom: 4px;
+          min-width: 60px;
+          text-align: center;
+        }
+        
+        /* Mobile tooltip positioning and sizing */
+        .balance-tooltip {
+          position: fixed;
+          bottom: 20px;
+          left: 20px;
+          right: 20px;
+          max-width: none;
+          width: auto;
+          font-size: 12px;
+          padding: 16px;
+          border-radius: 16px;
+          box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+          z-index: 1000;
+        }
+        
+        /* Mobile tooltip header */
+        .balance-tooltip-header {
+          margin-bottom: 12px;
+          padding-bottom: 8px;
+        }
+        .balance-tooltip-title {
+          font-size: 14px;
+        }
+        .balance-tooltip-close {
+          font-size: 20px;
+          padding: 4px 8px;
+        }
+        
+        /* Mobile breakdown sections */
+        .balance-tooltip .breakdown-line {
+          margin: 6px 0;
+          padding: 4px 0;
+          font-size: 12px;
+        }
+        .balance-tooltip .breakdown-line.item {
+          padding: 6px 10px;
+          margin: 3px 0;
+        }
+        .balance-tooltip .breakdown-section-title {
+          font-size: 11px;
+          margin-bottom: 6px;
+        }
+        .balance-tooltip .breakdown-total {
+          font-size: 14px;
+          padding: 12px 16px;
+          margin-left: -16px;
+          margin-right: -16px;
+          margin-bottom: -12px;
+        }
+        
+        /* Improve touch targets */
+        .balance-badge {
+          min-height: 24px;
+          min-width: 70px;
+        }
+        
+        /* Better mobile scroll hint */
+        .mobile-scroll-hint {
+          font-size: 14px;
+          padding: 8px;
+          background: rgba(79, 140, 255, 0.1);
+          border-radius: 8px;
+          margin-bottom: 12px;
+        }
       }
     </style>
   </head>
@@ -545,24 +620,51 @@
         const closeAllTooltips = () => {
           document.querySelectorAll('.balance-badge.open').forEach(b => b.classList.remove('open'));
         };
+        
+        // Close tooltips when clicking outside
         document.addEventListener('click', (e) => {
           const target = e.target;
           if (!(target instanceof Element)) return;
-          if (!target.closest('.balance-badge')) {
+          if (!target.closest('.balance-badge') && !target.closest('.balance-tooltip')) {
             closeAllTooltips();
           }
         });
+        
+        // Close tooltips on scroll (mobile UX improvement)
+        let scrollTimeout;
+        document.addEventListener('scroll', () => {
+          clearTimeout(scrollTimeout);
+          scrollTimeout = setTimeout(() => {
+            closeAllTooltips();
+          }, 150);
+        }, { passive: true });
+        
         document.querySelectorAll('.balance-badge').forEach(badge => {
           badge.setAttribute('tabindex', '0');
           badge.setAttribute('role', 'button');
           badge.setAttribute('aria-expanded', 'false');
+          badge.setAttribute('aria-label', 'View daily balance breakdown');
+          
           const toggle = (ev) => {
             ev.stopPropagation();
+            ev.preventDefault();
             const isOpen = badge.classList.toggle('open');
             badge.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            
+            // On mobile, scroll the badge into view when opening
+            if (isOpen && window.innerWidth <= 767) {
+              setTimeout(() => {
+                badge.scrollIntoView({ 
+                  behavior: 'smooth', 
+                  block: 'center',
+                  inline: 'center'
+                });
+              }, 100);
+            }
           };
+          
           badge.addEventListener('click', toggle);
-          badge.addEventListener('touchstart', toggle, { passive: true });
+          badge.addEventListener('touchstart', toggle, { passive: false });
           badge.addEventListener('keydown', (ev) => {
             if (ev.key === 'Enter' || ev.key === ' ') {
               ev.preventDefault();
@@ -573,6 +675,26 @@
               badge.setAttribute('aria-expanded', 'false');
             }
           });
+        });
+        
+        // Prevent body scroll when tooltip is open on mobile
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+              const hasOpenTooltip = document.querySelector('.balance-badge.open');
+              if (window.innerWidth <= 767) {
+                if (hasOpenTooltip) {
+                  document.body.style.overflow = 'hidden';
+                } else {
+                  document.body.style.overflow = '';
+                }
+              }
+            }
+          });
+        });
+        
+        document.querySelectorAll('.balance-badge').forEach(badge => {
+          observer.observe(badge, { attributes: true });
         });
       })();
     </script>
