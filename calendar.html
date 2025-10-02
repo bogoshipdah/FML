@@ -162,23 +162,11 @@
               // Find the parent cell and highlight the entire cell
               const cell = dayEl.closest('.cell');
               if (cell) {
-                cell.style.backgroundColor = '#00ff41';
+                // Border-only glow
+                cell.style.backgroundColor = '';
                 cell.style.borderColor = '#00ff41';
-                cell.style.boxShadow = '0 0 20px rgba(0, 255, 65, 0.5), inset 0 0 20px rgba(0, 255, 65, 0.2)';
-                cell.style.color = '#000';
+                cell.style.boxShadow = '0 0 16px rgba(0, 255, 65, 0.45)';
                 cell.title = 'Today';
-                
-                // Make sure the day number stands out
-                dayEl.style.color = '#000';
-                dayEl.style.fontWeight = '900';
-                dayEl.style.fontSize = '16px';
-                
-                // Make all list items in this cell have dark text for readability
-                const listItems = cell.querySelectorAll('li');
-                listItems.forEach(li => {
-                  li.style.color = '#000';
-                  li.style.fontWeight = '600';
-                });
               }
             }
           });
