@@ -366,11 +366,11 @@
           <button id="lock" class="btn secondary" type="button">Lock</button>
         </nav>
       </header>
-      <div style="text-align: center; margin-bottom: 20px; padding: 16px; background: rgba(79, 140, 255, 0.1); border: 2px solid #4f8cff; border-radius: 12px;">
-        <div style="font-size: 14px; color: var(--muted); margin-bottom: 4px;">Current Balance</div>
-        <div style="font-size: 32px; font-weight: 700; color: #4f8cff;">$2,591.37</div>
-        <div style="font-size: 12px; color: var(--muted);">as of 10/2/25</div>
-      </div>
+        <div style="text-align: center; margin-bottom: 20px; padding: 16px; background: rgba(79, 140, 255, 0.1); border: 2px solid #4f8cff; border-radius: 12px;">
+          <div style="font-size: 14px; color: var(--muted); margin-bottom: 4px;">Current Balance</div>
+          <div style="font-size: 32px; font-weight: 700; color: #4f8cff;">$2,623.16</div>
+          <div style="font-size: 12px; color: var(--muted);">as of 10/3/25</div>
+        </div>
       <section class="cal-wrap">
         <div class="cal-header">
           <div class="legend">
@@ -392,9 +392,9 @@
           <div class="dow">Sun</div><div class="dow">Mon</div><div class="dow">Tue</div><div class="dow">Wed</div><div class="dow">Thu</div><div class="dow">Fri</div><div class="dow">Sat</div>
           <div class="cell"></div><div class="cell"></div><div class="cell"></div>
           <div class="cell uwm-window"><div class="day">1</div><ul><li class="bill">NEXT Insurance (Trainer Liability) — $28.08</li><li class="bill">ISSA (subscription) — $16.65</li><li class="bill">BCBS Health Insurance — $45.41</li><li class="bill">Meetup.org — $47.96</li><li class="bill">Travelers (Home Insurance) — $232.33</li><li class="debt">UWM Mortgage (window 1–16) — $2,674.85</li></ul></div>
-          <div class="cell uwm-window"><div class="day">2</div><ul></ul></div>
-          <div class="cell uwm-window"><div class="day">3</div><ul><li class="bill">Water — $23.69 (1/3 of ~$71.06)</li></ul></div>
-          <div class="cell uwm-window"><div class="day">4</div><ul><li class="income">🏠 Room Rent (Tenant #1) — $600.00</li></ul></div>
+          <div class="cell uwm-window"><div class="day">2</div><ul><li class="bill">Costco Groceries — $172.80</li></ul></div>
+          <div class="cell uwm-window"><div class="day">3</div><ul><li class="bill">Water — $23.69 (1/3 of ~$71.06)</li><li class="income">🏠 Room Rent (Tenant #1) — $600.00</li></ul></div>
+          <div class="cell uwm-window"><div class="day">4</div><ul></ul></div>
           <div class="cell uwm-window"><div class="day">5</div><ul><li class="bill">Shopify — $1.07</li><li class="income-payroll">💰 Booz Allen Hamilton Payroll — $1,928.03</li></ul></div>
           <div class="cell uwm-window"><div class="day">6</div><ul></ul></div>
           <div class="cell uwm-window"><div class="day">7</div><ul></ul></div>
@@ -426,8 +426,8 @@
         </div>
         <div class="totals">
           <div class="row"><span>Total Money In:</span> <span class="money-in">$5,096.07</span></div>
-          <div class="row"><span>Total Money Out:</span> <span class="money-out">$5,823.79</span></div>
-          <div class="row"><span>Result (Shortfall if negative):</span> <span style="font-weight:700;color:#ff8b8b;">$-727.72</span></div>
+          <div class="row"><span>Total Money Out:</span> <span class="money-out">$5,996.59</span></div>
+          <div class="row"><span>Result (Shortfall if negative):</span> <span style="font-weight:700;color:#ff8b8b;">$-900.52</span></div>
           <div class="footer-note" style="margin-top:10px;color:var(--muted);">Note: UWM Mortgage appears on the 1st as a 1–16 day payment window.</div>
         </div>
       </section>
@@ -505,8 +505,8 @@
         }
       })();
       (function computeDailyBalances(){
-        // End-of-day balance for Oct 1 (user-provided current as of 10/2/25)
-        const balanceAfterDay1 = 2591.37;
+        // Current balance as of Oct 3 (user-provided)
+        const balanceAfterDay3 = 2623.16;
         const mortgageDay = 15;
         const mortgageAmount = 2674.85; // assumed payment on 15th
 
@@ -613,17 +613,17 @@
           }
         });
 
-        // Day 1: directly show the provided end-of-day balance
-        let running = balanceAfterDay1;
-        const cellDay1 = dayCells.find(c => parseInt(c.querySelector('.day').textContent, 10) === 1);
-        if (cellDay1) {
-          const badge1 = document.createElement('div');
-          badge1.className = 'balance-badge';
-          badge1.textContent = `End: $${running.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        // Day 3: directly show the provided current balance
+        let running = balanceAfterDay3;
+        const cellDay3 = dayCells.find(c => parseInt(c.querySelector('.day').textContent, 10) === 3);
+        if (cellDay3) {
+          const badge3 = document.createElement('div');
+          badge3.className = 'balance-badge';
+          badge3.textContent = `End: $${running.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
           
-          // Create breakdown for day 1
-          const day1Items = [];
-          const items = cellDay1.querySelectorAll('li');
+          // Create breakdown for day 3
+          const day3Items = [];
+          const items = cellDay3.querySelectorAll('li');
           items.forEach(li => {
             const txt = li.textContent || '';
             if (/uwm\s*mortgage.*window/i.test(txt)) return;
@@ -632,44 +632,44 @@
             const amt = parseFloat(m[1].replace(/,/g, ''));
             const name = li.textContent.split(' — ')[0] || 'Unknown';
             const isPositive = li.classList.contains('income') || li.classList.contains('income-payroll');
-            day1Items.push({ name, amount: amt, isPositive });
+            day3Items.push({ name, amount: amt, isPositive });
           });
-          const adds1 = day1Items.filter(i => i.isPositive).reduce((s, i) => s + i.amount, 0);
-          const subs1 = day1Items.filter(i => !i.isPositive).reduce((s, i) => s + i.amount, 0);
-          const start1 = running - (adds1 - subs1);
+          const adds3 = day3Items.filter(i => i.isPositive).reduce((s, i) => s + i.amount, 0);
+          const subs3 = day3Items.filter(i => !i.isPositive).reduce((s, i) => s + i.amount, 0);
+          const start3 = running - (adds3 - subs3);
           // Create tooltip for desktop
-          const tooltip1 = document.createElement('div');
-          tooltip1.className = 'balance-tooltip';
-          tooltip1.innerHTML = `
+          const tooltip3 = document.createElement('div');
+          tooltip3.className = 'balance-tooltip';
+          tooltip3.innerHTML = `
             <div class="balance-tooltip-header">
-              <div class="balance-tooltip-title">Day 1 Breakdown</div>
+              <div class="balance-tooltip-title">Day 3 Breakdown</div>
               <button class="balance-tooltip-close" aria-label="Close tooltip">×</button>
             </div>
-            ${createBreakdownContent(1, start1, adds1, subs1, running, day1Items)}
+            ${createBreakdownContent(3, start3, adds3, subs3, running, day3Items)}
           `;
           
           // Add close button functionality
-          const closeBtn1 = tooltip1.querySelector('.balance-tooltip-close');
-          closeBtn1.addEventListener('click', (e) => {
+          const closeBtn3 = tooltip3.querySelector('.balance-tooltip-close');
+          closeBtn3.addEventListener('click', (e) => {
             e.stopPropagation();
-            badge1.classList.remove('open');
-            badge1.setAttribute('aria-expanded', 'false');
+            badge3.classList.remove('open');
+            badge3.setAttribute('aria-expanded', 'false');
           });
           
-          badge1.appendChild(tooltip1);
+          badge3.appendChild(tooltip3);
           
           if (running < 0) {
-            badge1.classList.add('balance-neg');
+            badge3.classList.add('balance-neg');
           } else if (running < 300) {
-            badge1.classList.add('balance-low');
+            badge3.classList.add('balance-low');
           } else {
-            badge1.classList.add('balance-pos');
+            badge3.classList.add('balance-pos');
           }
-          cellDay1.appendChild(badge1);
+          cellDay3.appendChild(badge3);
         }
 
-        // Days 2..31: accumulate from the provided day-1 ending balance
-        for (let d = 2; d <= 31; d++) {
+        // Days 4..31: accumulate from the provided day-3 ending balance
+        for (let d = 4; d <= 31; d++) {
           const start = running;
           const cell = dayCells.find(c => parseInt(c.querySelector('.day').textContent, 10) === d);
           if (!cell) continue;
