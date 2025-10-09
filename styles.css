@@ -181,5 +181,71 @@ button:disabled, .btn:disabled {
 
 .foot { margin-top: 16px; color: var(--muted); }
 
+/* Grocery Section Styles */
+.grocery-section {
+  font-family: var(--font-family);
+}
+
+.store-section {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.grocery-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.grocery-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.grocery-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: rgba(79, 140, 255, 0.1);
+  border: 1px solid rgba(79, 140, 255, 0.3);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4f8cff;
+  margin-top: 5px;
+}
+
+/* Mobile responsiveness for grocery section */
+@media (max-width: 767px) {
+  .grocery-section > div {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+  }
+  
+  .store-section {
+    padding: 12px;
+  }
+  
+  .grocery-item {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+  
+  .grocery-total {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+}
+
 
 
