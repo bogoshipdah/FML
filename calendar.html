@@ -368,8 +368,8 @@
       </header>
         <div style="text-align: center; margin-bottom: 20px; padding: 16px; background: rgba(79, 140, 255, 0.1); border: 2px solid #4f8cff; border-radius: 12px;">
           <div style="font-size: 14px; color: var(--muted); margin-bottom: 4px;">Current Balance</div>
-          <div style="font-size: 32px; font-weight: 700; color: #4f8cff;">$2,623.16</div>
-          <div style="font-size: 12px; color: var(--muted);">as of 10/3/25</div>
+          <div style="font-size: 32px; font-weight: 700; color: #4f8cff;">$4,613.18</div>
+          <div style="font-size: 12px; color: var(--muted);">as of 10/8/25</div>
         </div>
       <section class="cal-wrap">
         <div class="cal-header">
@@ -505,8 +505,8 @@
         }
       })();
       (function computeDailyBalances(){
-        // Current balance as of Oct 3 (user-provided)
-        const balanceAfterDay3 = 2623.16;
+        // Current balance as of Oct 8 (user-provided)
+        const balanceAfterDay8 = 4613.18;
         const mortgageDay = 15;
         const mortgageAmount = 2674.85; // assumed payment on 15th
 
@@ -613,17 +613,17 @@
           }
         });
 
-        // Day 3: directly show the provided current balance
-        let running = balanceAfterDay3;
-        const cellDay3 = dayCells.find(c => parseInt(c.querySelector('.day').textContent, 10) === 3);
-        if (cellDay3) {
-          const badge3 = document.createElement('div');
-          badge3.className = 'balance-badge';
-          badge3.textContent = `End: $${running.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        // Day 8: directly show the provided current balance
+        let running = balanceAfterDay8;
+        const cellDay8 = dayCells.find(c => parseInt(c.querySelector('.day').textContent, 10) === 8);
+        if (cellDay8) {
+          const badge8 = document.createElement('div');
+          badge8.className = 'balance-badge';
+          badge8.textContent = `End: $${running.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
           
-          // Create breakdown for day 3
-          const day3Items = [];
-          const items = cellDay3.querySelectorAll('li');
+          // Create breakdown for day 8
+          const day8Items = [];
+          const items = cellDay8.querySelectorAll('li');
           items.forEach(li => {
             const txt = li.textContent || '';
             if (/uwm\s*mortgage.*window/i.test(txt)) return;
@@ -632,44 +632,81 @@
             const amt = parseFloat(m[1].replace(/,/g, ''));
             const name = li.textContent.split(' — ')[0] || 'Unknown';
             const isPositive = li.classList.contains('income') || li.classList.contains('income-payroll');
-            day3Items.push({ name, amount: amt, isPositive });
+            day8Items.push({ name, amount: amt, isPositive });
           });
-          const adds3 = day3Items.filter(i => i.isPositive).reduce((s, i) => s + i.amount, 0);
-          const subs3 = day3Items.filter(i => !i.isPositive).reduce((s, i) => s + i.amount, 0);
-          const start3 = running - (adds3 - subs3);
+          const adds8 = day8Items.filter(i => i.isPositive).reduce((s, i) => s + i.amount, 0);
+          const subs8 = day8Items.filter(i => !i.isPositive).reduce((s, i) => s + i.amount, 0);
+          const start8 = running - (adds8 - subs8);
           // Create tooltip for desktop
-          const tooltip3 = document.createElement('div');
-          tooltip3.className = 'balance-tooltip';
-          tooltip3.innerHTML = `
+          const tooltip8 = document.createElement('div');
+          tooltip8.className = 'balance-tooltip';
+          tooltip8.innerHTML = `
             <div class="balance-tooltip-header">
-              <div class="balance-tooltip-title">Day 3 Breakdown</div>
+              <div class="balance-tooltip-title">Day 8 Breakdown</div>
               <button class="balance-tooltip-close" aria-label="Close tooltip">×</button>
             </div>
-            ${createBreakdownContent(3, start3, adds3, subs3, running, day3Items)}
+            ${createBreakdownContent(8, start8, adds8, subs8, running, day8Items)}
           `;
           
           // Add close button functionality
-          const closeBtn3 = tooltip3.querySelector('.balance-tooltip-close');
-          closeBtn3.addEventListener('click', (e) => {
+          const closeBtn8 = tooltip8.querySelector('.balance-tooltip-close');
+          closeBtn8.addEventListener('click', (e) => {
             e.stopPropagation();
-            badge3.classList.remove('open');
-            badge3.setAttribute('aria-expanded', 'false');
+            badge8.classList.remove('open');
+            badge8.setAttribute('aria-expanded', 'false');
           });
           
-          badge3.appendChild(tooltip3);
+          badge8.appendChild(tooltip8);
           
           if (running < 0) {
-            badge3.classList.add('balance-neg');
+            badge8.classList.add('balance-neg');
           } else if (running < 300) {
-            badge3.classList.add('balance-low');
+            badge8.classList.add('balance-low');
           } else {
-            badge3.classList.add('balance-pos');
+            badge8.classList.add('balance-pos');
           }
-          cellDay3.appendChild(badge3);
+          cellDay8.appendChild(badge8);
         }
 
-        // Days 4..31: accumulate from the provided day-3 ending balance
-        for (let d = 4; d <= 31; d++) {
+        // Days 1..7: calculate backwards from day 8
+        let runningBackwards = running;
+        for (let d = 7; d >= 1; d--) {
+          const cell = dayCells.find(c => parseInt(c.querySelector('.day').textContent, 10) === d);
+          if (!cell) continue;
+          
+          // Calculate net change for this day
+          let dayNet = 0;
+          const items = cell.querySelectorAll('li');
+          items.forEach(li => {
+            const txt = li.textContent || '';
+            if (/uwm\s*mortgage.*window/i.test(txt)) return;
+            const m = li.textContent.match(amountRegex);
+            if (!m) return;
+            const amt = parseFloat(m[1].replace(/,/g, ''));
+            const isPositive = li.classList.contains('income') || li.classList.contains('income-payroll');
+            dayNet += isPositive ? amt : -amt;
+          });
+          
+          // Subtract the day's net to get the starting balance
+          runningBackwards -= dayNet;
+          
+          const badge = document.createElement('div');
+          badge.className = 'balance-badge';
+          badge.textContent = `End: $${runningBackwards.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+          
+          if (runningBackwards < 0) {
+            badge.classList.add('balance-neg');
+          } else if (runningBackwards < 300) {
+            badge.classList.add('balance-low');
+          } else {
+            badge.classList.add('balance-pos');
+          }
+          
+          cell.appendChild(badge);
+        }
+
+        // Days 9..31: accumulate from the provided day-8 ending balance
+        for (let d = 9; d <= 31; d++) {
           const start = running;
           const cell = dayCells.find(c => parseInt(c.querySelector('.day').textContent, 10) === d);
           if (!cell) continue;
